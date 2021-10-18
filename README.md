@@ -7,6 +7,15 @@
 <img src="https://raw.githubusercontent.com/emp-toolkit/emp-readme/master/art/logo-full.jpg" width=300px/>
 
 
+# Warning
+This repo is a comment version for [wangxiao's emp-tool](https://github.com/emp-toolkit/emp-tool)  repo with some demo or test case.  Any usage or acknowledgment should be based on the origin project.
+
+For testing compiling, you can just use:
+
+```
+cmake .
+make -j4
+```
 
 # Installation
 1. `wget https://raw.githubusercontent.com/emp-toolkit/emp-readme/master/scripts/install.py`
