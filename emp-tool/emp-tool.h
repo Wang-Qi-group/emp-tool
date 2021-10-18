@@ -35,6 +35,8 @@
 #include "emp-tool/gc/halfgate_gen.h"
 #include "emp-tool/gc/privacy_free_eva.h"
 #include "emp-tool/gc/privacy_free_gen.h"
+#include "emp-tool/gc/GarbledCircuits_eva.h"
+#include "emp-tool/gc/GarbledCircuits_gen.h"
 
 #include "emp-tool/execution/circuit_execution.h"
 #include "emp-tool/execution/protocol_execution.h"
