@@ -22,11 +22,13 @@ public:
 		Hash hash;
 		block ct[3];
 		block hct;
+		char tmp[16];
 		ct[0]=a;
 		ct[1]=b;
 		ct[2]=gateid;
 		hash.put_block(ct, 3);
-		hash.digest(hct);
+		hash.digest(tmp);
+		hct = _mm_setr_epi8(tmp[0],tmp[1],tmp[2],tmp[3],tmp[4],tmp[5],tmp[6],tmp[7],tmp[8],tmp[9],tmp[10],tmp[11],tmp[12],tmp[13],tmp[14],tmp[15]);
 		int place=hct[point.first()]*2+hct[point.second()]
 		return hct^gct[place];
 	}

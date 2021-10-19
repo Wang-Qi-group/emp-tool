@@ -69,6 +69,7 @@ public:
 		Hash hash;
 		block ct[4];
 		block pt[4][3];
+		char tmp[16];
 
 		block pt[0][0] = pt[2][0] = la;
 		block pt[1][0] = pt[3][0] = lb;
@@ -77,7 +78,8 @@ public:
 		block pt[0][2] = pt[1][2] = pt[2][2] = pt[3][2] = this->gateid;
 		for(int i=0;i<4;i++){
 			hash.put_block(pt[i], 3);
-			hash.digest(ct[i]);
+			hash.digest(tmp);
+			ct[i] = _mm_setr_epi8(tmp[0],tmp[1],tmp[2],tmp[3],tmp[4],tmp[5],tmp[6],tmp[7],tmp[8],tmp[9],tmp[10],tmp[11],tmp[12],tmp[13],tmp[14],tmp[15]);
 		}
 		std::pair<int,int> point = point_and_permute(ct, this->gct, wa, wb);
 
