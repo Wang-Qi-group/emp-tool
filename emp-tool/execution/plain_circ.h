@@ -134,6 +134,9 @@ public:
 	uint64_t num_and() override {
 		return ands;
 	}
+	block nand_gate(int gateid, block* a, block* b) override {
+		return public_one;
+	}
 
 private:
 	uint64_t compute_and(uint64_t a, uint64_t b) {

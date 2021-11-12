@@ -14,6 +14,7 @@ namespace emp {
 #define AND_GATE 0
 #define XOR_GATE 1
 #define NOT_GATE 2
+#define NAND_GATE 3
 
 template<typename T>
 void execute_circuit(block * wires, const T * gates, size_t num_gate) {
@@ -26,6 +27,10 @@ void execute_circuit(block * wires, const T * gates, size_t num_gate) {
 		}
 		else if (gates[4*i+3] == NOT_GATE) {
 			wires[gates[4*i+2]] = CircuitExecution::circ_exec->not_gate(wires[gates[4*i]]);
+		}else if (gates[4*i+3] == NAND_GATE) {
+			block* a = &wires[gates[4*i]];
+			block* b = &wires[gates[4*i+1]];
+			wires[gates[4*i+2]] = CircuitExecution::circ_exec->nand_gate(i, a, b);
 		} else {
 			block tmp = CircuitExecution::circ_exec->xor_gate(wires[gates[4*i]],  wires[gates[4*i+1]]);
 			block tmp2 = CircuitExecution::circ_exec->and_gate(wires[gates[4*i]], wires[gates[4*i+1]]);
@@ -38,7 +43,7 @@ void execute_circuit(block * wires, const T * gates, size_t num_gate) {
 class BristolFormat { public:
 	int num_gate, num_wire, n1, n2, n3;
 	vector<int> gates;
-	vector<block> wires;
+	vector<block> wires;	
 	std::ofstream fout;
 
 	BristolFormat(int num_gate, int num_wire, int n1, int n2, int n3, int * gate_arr) {
@@ -121,8 +126,14 @@ class BristolFormat { public:
 			else if (gates[4*i+3] == XOR_GATE) {
 				wires[gates[4*i+2]] = CircuitExecution::circ_exec->xor_gate(wires[gates[4*i]], wires[gates[4*i+1]]);
 			}
-			else  
+			else if  (gates[4*i+3] == NOT_GATE) {
 				wires[gates[4*i+2]] = CircuitExecution::circ_exec->not_gate(wires[gates[4*i]]);
+			}
+			else{
+				block* a = &wires[gates[4*i]];
+				block* b = &wires[gates[4*i+1]];
+				wires[gates[4*i+2]] = CircuitExecution::circ_exec->nand_gate(i, a, b);
+			}
 		}
 		memcpy(out, wires.data()+(num_wire-n3), n3*sizeof(block));
 	}

@@ -1,5 +1,3 @@
-#ifndef EMP_CIRCUIT_EXECUTION_H__
-#define EMP_CIRCUIT_EXECUTION_H__
 #include "emp-tool/utils/block.h"
 #include "emp-tool/utils/constants.h"
 
@@ -18,6 +16,7 @@ class CircuitExecution { public:
 	virtual block and_gate(const block& in1, const block& in2) = 0;
 	virtual block xor_gate(const block&in1, const block&in2) = 0;
 	virtual block not_gate(const block& in1) = 0;
+	virtual block nand_gate(int gateid, block  *in1, block *in2) = 0;
 	virtual block public_label(bool b) = 0;
 	virtual uint64_t num_and() {
 		return -1;

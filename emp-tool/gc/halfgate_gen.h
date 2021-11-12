@@ -78,6 +78,10 @@ public:
 	uint64_t num_and() override {
 		return mitccrh.gid/2;
 	}
+	block nand_gate(int gateid, block *a, block *b) override {
+		return constant[0];
+	}
 };
+
 }
 #endif// HALFGATE_GEN_H__
