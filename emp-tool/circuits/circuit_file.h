@@ -27,11 +27,7 @@ void execute_circuit(block * wires, const T * gates, size_t num_gate) {
 		}
 		else if (gates[4*i+3] == NOT_GATE) {
 			wires[gates[4*i+2]] = CircuitExecution::circ_exec->not_gate(wires[gates[4*i]]);
-		}else if (gates[4*i+3] == NAND_GATE) {
-			block* a = &wires[gates[4*i]];
-			block* b = &wires[gates[4*i+1]];
-			wires[gates[4*i+2]] = CircuitExecution::circ_exec->nand_gate(i, a, b);
-		} else {
+		}else {
 			block tmp = CircuitExecution::circ_exec->xor_gate(wires[gates[4*i]],  wires[gates[4*i+1]]);
 			block tmp2 = CircuitExecution::circ_exec->and_gate(wires[gates[4*i]], wires[gates[4*i+1]]);
 			wires[gates[4*i+2]] = CircuitExecution::circ_exec->xor_gate(tmp, tmp2);
@@ -45,6 +41,8 @@ class BristolFormat { public:
 	vector<int> gates;
 	vector<block> wires;	
 	std::ofstream fout;
+	vector<block> ingoing_wires;
+	vector<block> outgoing_wires;
 
 	BristolFormat(int num_gate, int num_wire, int n1, int n2, int n3, int * gate_arr) {
 		this->num_gate = num_gate;
@@ -129,14 +127,46 @@ class BristolFormat { public:
 			else if  (gates[4*i+3] == NOT_GATE) {
 				wires[gates[4*i+2]] = CircuitExecution::circ_exec->not_gate(wires[gates[4*i]]);
 			}
-			else{
-				block* a = &wires[gates[4*i]];
-				block* b = &wires[gates[4*i+1]];
-				wires[gates[4*i+2]] = CircuitExecution::circ_exec->nand_gate(i, a, b);
-			}
 		}
 		memcpy(out, wires.data()+(num_wire-n3), n3*sizeof(block));
 	}
+
+	void initialization(const block *a, const block *b){
+		memcpy(ingoing_wires.data(), a, 4*num_gate*sizeof(block));
+		memcpy(outgoing_wires.data(), b, 2*num_gate*sizeof(block));
+		int in = 0;
+		int out = 0;
+		block[4] ingoing;
+		block[2] outgoing;
+		for(int i = 0;i<num_gate;++i){
+			for(int j=0;j<4;j++){
+				ingoing[j]=ingoing_wires[in+j];
+			}
+			for(int j=0;j<2;j++){
+				ingoing[j]=outgoing_wires[out+j];
+			}
+			in+=4;
+			out+=2;
+			CircuitExecution::circ_exec->nand_gate(i, ingoing, outgoing);
+		}
+	}
+
+	void compute(const block *a, const block *b){
+		memcpy(ingoing_wires.data(), a, 2*num_gate*sizeof(block));
+		memcpy(outgoing_wires.data(), b, num_gate*sizeof(block));
+		int in = 0;
+		int out = 0;
+		block[2] ingoing;
+		block[1] outgoing;
+		for(int i = 0;i<num_gate;++i){
+			for(int j=0;j<2;j++){
+				ingoing[j]=ingoing_wires[in+j];
+			}
+			ingoing[j]=outgoing_wires[out+j];
+			in+=2;
+			out+=1;
+			CircuitExecution::circ_exec->nand_gate(i, ingoing, outgoing);
+		}
 };
 
 class BristolFashion { public:
