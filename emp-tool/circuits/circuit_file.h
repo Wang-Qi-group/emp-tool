@@ -11,7 +11,7 @@
 using std::vector;
 
 namespace emp {
-#define AND_GATE 0
+#define AND_GATE 0 
 #define XOR_GATE 1
 #define NOT_GATE 2
 #define NAND_GATE 3
@@ -63,7 +63,7 @@ class BristolFormat { public:
 		this->from_file(file);
 	}
 
-
+	
 	void to_file(const char * filename, const char * prefix) {
 		fout.open(filename);
 		fout << "int "<<string(prefix)+"_num_gate = "<<num_gate<<";\n";
@@ -134,19 +134,15 @@ class BristolFormat { public:
 	void initialization(const block *a, const block *b){
 		memcpy(ingoing_wires.data(), a, 4*num_gate*sizeof(block));
 		memcpy(outgoing_wires.data(), b, 2*num_gate*sizeof(block));
-		int in = 0;
-		int out = 0;
-		block[4] ingoing;
-		block[2] outgoing;
+		block ingoing[4];
+		block outgoing[2];
 		for(int i = 0;i<num_gate;++i){
 			for(int j=0;j<4;j++){
-				ingoing[j]=ingoing_wires[in+j];
+				ingoing[j]=ingoing_wires[4*i+j];
 			}
 			for(int j=0;j<2;j++){
-				ingoing[j]=outgoing_wires[out+j];
+				outgoing[j]=outgoing_wires[2*i+j];
 			}
-			in+=4;
-			out+=2;
 			CircuitExecution::circ_exec->nand_gate(i, ingoing, outgoing);
 		}
 	}
@@ -156,17 +152,16 @@ class BristolFormat { public:
 		memcpy(outgoing_wires.data(), b, num_gate*sizeof(block));
 		int in = 0;
 		int out = 0;
-		block[2] ingoing;
-		block[1] outgoing;
+		block lingoing[1];
+		block ringoing[1];
 		for(int i = 0;i<num_gate;++i){
-			for(int j=0;j<2;j++){
-				ingoing[j]=ingoing_wires[in+j];
-			}
-			ingoing[j]=outgoing_wires[out+j];
+			lingoing[0]=ingoing_wires[4*i];
+			ringoing[0]=ingoing_wires[4*i+2];
 			in+=2;
 			out+=1;
-			CircuitExecution::circ_exec->nand_gate(i, ingoing, outgoing);
+			CircuitExecution::circ_exec->nand_gate(i, lingoing, ringoing);
 		}
+	}
 };
 
 class BristolFashion { public:
@@ -239,6 +234,5 @@ class BristolFashion { public:
 		memcpy(out, wires.data()+(num_wire-num_output), num_output*sizeof(block));
 	}
 };
-
 }
 #endif// CIRCUIT_FILE
