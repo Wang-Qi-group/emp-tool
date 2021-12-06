@@ -1,3 +1,5 @@
+#ifndef EMP_CIRCUIT_EXECUTION_H__
+#define EMP_CIRCUIT_EXECUTION_H__
 #include "emp-tool/utils/block.h"
 #include "emp-tool/utils/constants.h"
 
